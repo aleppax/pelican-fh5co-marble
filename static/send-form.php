@@ -6,6 +6,7 @@ require 'mail-config.php';
 $response = array(
 	'fields' => array(
 		'name' => 'error',
+        'lastname' => 'error',
 		'email' => 'error',
 		'phone' => 'error',
 		'message' => 'error'
@@ -30,6 +31,7 @@ function sendForm($data) {
 	$body = " A form was sent with the following values.
 
 <b>Name:</b><blockquote>" . utf8_decode($data['name']) . "</blockquote>
+<b>Last name:</b><blockquote>" . utf8_decode($data['lastname']) . "</blockquote>
 <b>Email:</b><blockquote>" . utf8_decode($data['email']) . "</blockquote>
 <b>Phone:</b><blockquote>" . utf8_decode($data['phone']) . "</blockquote>
 <b>Message:</b><blockquote>" . utf8_decode($data['message']) . "</blockquote>";
@@ -50,7 +52,7 @@ function sendForm($data) {
 		$mail->AddAddress(RECEIPIENT, RECEIPIENT_REALNAME);
 		$mail->AddAddress(SMTP_USER, SMTP_REALNAME);
 		$mail->SetFrom(SMTP_USER, SMTP_REALNAME);
-		$mail->Subject = 'Formular von ' . $data['email'] . ' ' . $data['name'];
+		$mail->Subject = 'Modulo di contatto compilato da ' . $data['email'] . ' ' . $data['name'];
 		$mail->AltBody = $body;
 		$mail->MsgHTML(nl2br($body));
 		$mail->Send();
@@ -62,9 +64,12 @@ function sendForm($data) {
 	return $sent;
 }
 
-if (!empty($_POST) && (isset($_POST['lastname']) && empty($_POST['lastname']))) {
+if (!empty($_POST) && (isset($_POST['lastname']))) {
 	if (stringIsValid($_POST['name'])) {
 		$response['fields']['name'] = 'ok';
+	}
+	if (stringIsValid($_POST['lastname'])) {
+		$response['fields']['lastname'] = 'ok';
 	}
 	if (emailIsValid($_POST['email'])) {
 		$response['fields']['email'] = 'ok';
